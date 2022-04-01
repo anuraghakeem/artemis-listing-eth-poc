@@ -6,6 +6,7 @@ import Nav from './Comp/Nav'
 import './App.css';
 import Buying from "./Comp/Buying";
 import Footer from "./Comp/Footer";
+import Cancel from "./Comp/Cancel";
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
       <Nav connectWallet = {connectWallet} walletAddress={walletAddress}  />
       < Listing />
       <Buying />
+      <Cancel />
       <Footer />
     </div>
   );

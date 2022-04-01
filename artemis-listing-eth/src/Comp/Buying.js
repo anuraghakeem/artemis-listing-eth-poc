@@ -39,11 +39,9 @@ const Buying = () => {
           className="input-box"
         />
         <label>
-          <strong>
-          Token Address:
-          </strong>
+          <strong>Token Address:</strong>
+          {buyingTokenAddress}
         </label>
-        {buyingTokenAddress}
         <textarea
           value={buyingTokenAddress}
           onChange={handleBuyingTokenAddressChange}
