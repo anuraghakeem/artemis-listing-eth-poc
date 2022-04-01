@@ -4,6 +4,8 @@ import { ethers } from "ethers";
 import Listing from './Comp/Listing';
 import Nav from './Comp/Nav'
 import './App.css';
+import Buying from "./Comp/Buying";
+import Footer from "./Comp/Footer";
 
 
 function App() {
@@ -39,6 +41,8 @@ function App() {
     <div className="App">
       <Nav connectWallet = {connectWallet} walletAddress={walletAddress}  />
       < Listing />
+      <Buying />
+      <Footer />
     </div>
   );
 }
