@@ -31,7 +31,7 @@ button, .btn{
 }
 .form-container{
     padding: 0 100px;
-    width: 500px;
+    max-width: 500px;
     margin: auto;
     margin-bottom: 60px;
 
@@ -40,6 +40,7 @@ button, .btn{
 .form{
     display:flex;
     flex-direction: column;
+    word-wrap: break-word;
 }
 
 .input-box{
@@ -52,4 +53,13 @@ button, .btn{
     color: white;
     text-align: center;
     padding: 50px 0;
+}
+
+.buy-data-row{
+    margin-bottom: 25px;
+    word-wrap: break-word;
+}
+
+.btn-checkPrice{
+    margin-bottom: 20px;
 }

@@ -1,0 +1,8 @@
+const buyingData = {
+    tokenId: '15696979380589530268753251904588942079151696547717372651434342150111160696833',
+    tokenAddress: '0x2953399124F0cBB46d2CbACD8A89cF0599974963',
+    sellerAddress: '0x1CA92278982d9cec5bE6C8EFd39D2822D55E6BEe',
+    onSale: true,
+}
+
+export default buyingData;
