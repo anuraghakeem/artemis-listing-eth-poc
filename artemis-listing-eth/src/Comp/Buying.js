@@ -32,9 +32,9 @@ const Buying = ({ contract }) => {
       [tokenId, buyingTokenAddress, buyingSellerAddress]
     );
     const tx = await contract.functions.listings(listingKey);
-    console.log("receipt", tx);
-    const price = parseInt(tx[1]._hex);
-    console.log(price);
+    // console.log("receipt", tx);
+    const price = BigNumber.from(tx[1]._hex);
+    // console.log(price);
     updatebuyingPrice("" + price);
     updateDisplaybuyingPrice("" + ethers.utils.formatEther(price) + " Matic");
   };
@@ -42,7 +42,7 @@ const Buying = ({ contract }) => {
   const handleBuying = async (event) => {
     // alert('An essay was submitted: ' + this.state.value);
     event.preventDefault();
-    console.log("buying submitted!");
+    // console.log("buying submitted!");
     const tokenId = BigNumber.from(buyingTokenId);
     const listingKey = ethers.utils.AbiCoder.prototype.encode(
       ["uint256", "address", "address"],
@@ -53,7 +53,7 @@ const Buying = ({ contract }) => {
       value: ethers.BigNumber.from(buyingPrice),
     });
     const receipt = await tx.wait();
-    console.log("receipt", receipt);
+    // console.log("receipt", receipt);
   };
 
   // useEffect(()=>{
@@ -115,9 +115,7 @@ const Buying = ({ contract }) => {
         {displaybuyingPrice}
       </div>
       <div>
-        <button onClick={checkPrice} className='btn-checkPrice'>Check Price</button>
-      </div>
-      <div>
+        <button onClick={checkPrice} className='btn-checkPrice'>Check Price</button> 
         <button onClick={handleBuying}>Buy</button>
       </div>
     </div>

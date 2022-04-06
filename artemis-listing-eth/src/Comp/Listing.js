@@ -1,10 +1,16 @@
 import { BigNumber, ethers } from "ethers";
 import { useState } from "react";
 
-const Listing = ({contract}) => {
+import nftApprovalAbi from '../json/nftApprovalAbi.json'
+import configJSON from '../json/config.json'
+
+const Listing = ({contract, walletAddress}) => {
   const [listingTokenId, updateListingTokenId] = useState(0);
   const [listingTokenAddress, updateListingTokenAddress] = useState("");
   const [listingPrice, updateListingPrice] = useState('0.001');
+  // const [nftApprovalContract, updateNFTApprovalContract ] = useState(null)
+
+  const operatorAddress = configJSON.contract
 
   const handleListingTokenIdChange = (event) => {
     updateListingTokenId(event.target.value);
@@ -21,27 +27,51 @@ const Listing = ({contract}) => {
 
   const handleListingSubmit = async (event) => {
     // alert('An essay was submitted: ' + this.state.value);
-    event.preventDefault();
-    console.log("listing submitted for contract:", contract );
+    // event.preventDefault();
+    // console.log("listing submitted for contract:", contract );
     const tokenId = BigNumber.from(listingTokenId);
     const weiBigNumber = ethers.utils.parseEther(listingPrice);
     const wei = weiBigNumber.toString();
     // console.log('wei value: ',wei);
     const price = BigNumber.from(wei);
-    const tx = await contract.functions.listTokenForETH(tokenId, listingTokenAddress, price)
-    // const tx = await contract.functions.listTokenForETH(BigNumber.from('15696979380589530268753251904588942079151696547717372651434342150111160696833'), '0x2953399124F0cBB46d2CbACD8A89cF0599974963', BigNumber.from('1000000000000000'))
-    // const tx = await contract.functions.listTokenForETH(BigNumber.from('15696979380589530268753251904588942079151696547717372651434342150111160696833'), '0x2953399124F0cBB46d2CbACD8A89cF0599974963', BigNumber.from('1000000000000000'),{gasPrice: ethers.utils.parseUnits('100', 'gwei'), gasLimit: 1000000})
-    const receipt = await tx.wait();
-	  console.log("receipt", receipt);
-    updateListingTokenId(0);
-    updateListingTokenAddress('')
-    updateListingPrice(0)
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const nftApprovalContract1 = new ethers.Contract(listingTokenAddress, nftApprovalAbi, provider.getSigner())
+
+    // updateNFTApprovalContract(nftApprovalContract1)
+    
+    const isApproved = await nftApprovalContract1.functions.isApprovedForAll(walletAddress,operatorAddress);
+
+    // console.log('isApproved?: ', isApproved)
+
+    if(isApproved.length>0 && isApproved[0] != true) {
+      alert('Need to Approve Contract. Enter the token address and click Approve contract')
+    }
+
+    else if(isApproved.length>0 && isApproved[0] == true){
+      const tx = await contract.functions.listTokenForETH(tokenId, listingTokenAddress, price)
+      const receipt = await tx.wait();
+	    // console.log("receipt", receipt);
+    }
   };
+
+  const handleContractApproval = async () =>{
+    // console.log('Contract approval action fired!')
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const nftApprovalContract1 = new ethers.Contract(listingTokenAddress, nftApprovalAbi, provider.getSigner())
+
+    const tx = await nftApprovalContract1.functions.setApprovalForAll(operatorAddress,true);
+
+	  const receipt = await tx.wait();
+	  // console.log("receipt", receipt);
+
+  }
 
   return (
     <div className="form-container">
       <h1>Listing</h1>
-          <form onSubmit={handleListingSubmit} className='form'>
+          <div className='form'>
             <label>
               <strong>TokenID:</strong> 
               {/* {listingTokenId} */}
@@ -61,8 +91,12 @@ const Listing = ({contract}) => {
               {/* {listingPrice} */}
             </label>
               <textarea value={listingPrice} onChange={handleListingPriceChange} className='input-box' />
-            <input type="submit" value="List" className='btn' />
-          </form>
+              </div>
+              <div>
+            {/* <input type="submit" value="List" className='btn' /> */}
+            <button onClick={handleListingSubmit}>List</button>
+            <button onClick={handleContractApproval}>Approve Contract</button>
+          </div>
     </div>
   );
 };
