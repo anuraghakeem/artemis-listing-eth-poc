@@ -1,11 +1,8 @@
 import { ethers, BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 
-// import data from "../Data";
-// import nftPreview from "../Img/nftPreview.gif";
 
 const Buying = ({ contract }) => {
-  // const {tokenId:buyingTokenId, tokenAddress:buyingTokenAddress, sellerAddress:buyingSellerAddress, onSale} = data.buyingData;
 
   const [buyingTokenId, updateBuyingTokenId] = useState("");
   const [buyingTokenAddress, updateBuyingTokenAddress] = useState("");
@@ -32,42 +29,28 @@ const Buying = ({ contract }) => {
       [tokenId, buyingTokenAddress, buyingSellerAddress]
     );
     const tx = await contract.functions.listings(listingKey);
-    // console.log("receipt", tx);
     const price = BigNumber.from(tx[1]._hex);
-    // console.log(price);
     updatebuyingPrice("" + price);
     updateDisplaybuyingPrice("" + ethers.utils.formatEther(price) + " Matic");
   };
 
   const handleBuying = async (event) => {
-    // alert('An essay was submitted: ' + this.state.value);
     event.preventDefault();
-    // console.log("buying submitted!");
     const tokenId = BigNumber.from(buyingTokenId);
     const listingKey = ethers.utils.AbiCoder.prototype.encode(
       ["uint256", "address", "address"],
       [tokenId, buyingTokenAddress, buyingSellerAddress]
     );
-    // const tx = await contract.functions.buyListingWithETH(listingKey, {value: ethers.BigNumber.from(buyingPrice), gasPrice: ethers.utils.parseUnits('100', 'gwei'), gasLimit: 1000000});
+    
     const tx = await contract.functions.buyListingWithETH(listingKey, {
       value: ethers.BigNumber.from(buyingPrice),
     });
     const receipt = await tx.wait();
-    // console.log("receipt", receipt);
   };
-
-  // useEffect(()=>{
-  //   if(onSale){
-  //     checkPrice()
-  //     console.log('price updated')
-  //   }
-  // },[buyingTokenId,buyingTokenAddress, buyingSellerAddress])
-
   return (
     <div className="form-container">
       <h1>Buying</h1>
       <div className="form">
-      {/* <form onSubmit={handleBuyingSubmit} className="form"> */}
         <label>
           <strong>TokenID:</strong>
           {buyingTokenId}
@@ -96,20 +79,8 @@ const Buying = ({ contract }) => {
           className="input-box"
         />
 
-        {/* <input type="submit" value="Buy" className="btn" /> */}
         </div>
-      {/* </form> */}
-      {/* <div className="buy-data-row">
-        <img src={nftPreview} />
-      </div>
-      <div className="buy-data-row">
-        <strong>Token Id: </strong>
-        {buyingTokenId}
-      </div>
-      <div className="buy-data-row">
-        <strong>Token Address: </strong>
-        {buyingTokenAddress}
-      </div> */}
+      
       <div className="buy-data-row">
         <strong>Price: </strong>
         {displaybuyingPrice}
